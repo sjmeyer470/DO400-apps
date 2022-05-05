@@ -1,0 +1,35 @@
+pipeline {
+agent { node { label 'maven' } }
+environment { APP_NAMESPACE = 'yffqpd-security-scans' }
+stages {
+stage('Test') {
+steps {
+dir('shopping-cart') {
+sh './mvnw clean test'
+}
+}
+}
+stage('Image Build') {
+steps {
+dir('shopping-cart') {
+sh """
+oc start-build security-scans \
+--follow --wait -n ${APP_NAMESPACE}
+"""
+}
+}
+}
+stage('Deploy') {
+steps {
+dir('shopping-cart') {
+sh """
+oc patch deployment security-scans \
+-p '{"spec": {"template": {"metadata": {"labels":
+{"build": "build-${BUILD_NUMBER}"}}}}}' \
+-n ${APP_NAMESPACE}
+"""
+}
+}
+}
+}
+}
