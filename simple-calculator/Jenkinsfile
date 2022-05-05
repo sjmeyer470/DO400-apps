@@ -15,6 +15,13 @@ pipeline {
                     sh './mvnw clean test'
                 }
             }
+            stage('Check Style') {
+                steps {
+                    dir('simple-calculator') {
+                        sh './mvnw clean checkstyle:check'
+                    }
+                }
+            }
             post {
                 failure {
                     sendFailureAlert('failed','team@example.com')
@@ -24,13 +31,7 @@ pipeline {
                 }
             }
         }
-        stage('Check Style') {
-            steps {
-                dir('simple-calculator') {
-                    sh './mvnw clean checkstyle:check'
-                }
-            }
-        }
+        
     }
 }
 
