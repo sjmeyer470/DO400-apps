@@ -1,40 +1,40 @@
 pipeline {
     agent { node { label 'maven' } }
     options { skipDefaultCheckout true }
-        stages {
-            stage('Checkout') {
-               
-                steps {
-                    sendNotification('started', 'team@example.com')
-                    git branch: 'notifications', url: 'https://github.com/sjmeyer470/DO400-apps'
-                }
+    stages {
+        stage('Checkout') {
+            
+            steps {
+                sendNotification('started', 'team@example.com')
+                git branch: 'notifications', url: 'https://github.com/sjmeyer470/DO400-apps'
             }
-            stage('Test') {
-                steps {
-                    dir('simple-calculator') {
-                    sh './mvnw clean test'
-                    }
-                }
-            }
-            stage('Check Style') {
-                steps {
-                    dir('simple-calculator') {
-                        sh './mvnw clean checkstyle:check'
-                    }
-                }
-            }
-            post {
-                failure {
-                    sendFailureAlert('failed','team@example.com')
-                }
-                always {
-                    sendNotification('finished', 'team@example.com')
+        }
+        stage('Test') {
+            steps {
+                dir('simple-calculator') {
+                sh './mvnw clean test'
                 }
             }
         }
-        
+        stage('Check Style') {
+            steps {
+                dir('simple-calculator') {
+                    sh './mvnw clean checkstyle:check'
+                }
+            }
+        }
+        post {
+            failure {
+                sendFailureAlert('failed','team@example.com')
+            }
+            always {
+                sendNotification('finished', 'team@example.com')
+            }
+        }
     }
+        
 }
+
 
 void sendNotification(String action, String email) {
     mail to: "${email}",
