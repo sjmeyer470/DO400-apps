@@ -13,6 +13,7 @@ pipeline {
                 steps {
                     dir('simple-calculator') {
                     sh './mvnw clean test'
+                    }
                 }
             }
             stage('Check Style') {
