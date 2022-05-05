@@ -27,7 +27,7 @@ pipeline {
     }
     post {
         failure {
-            sendFailureAlert('failed','team@example.com')
+            sendFailureAlert('team@example.com')
         }
         always {
             sendNotification('finished', 'team@example.com')
