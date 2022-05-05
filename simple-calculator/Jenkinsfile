@@ -15,6 +15,11 @@ pipeline {
                     sh './mvnw clean test'
                 }
             }
+            post {
+                always {
+                    sendNotification('finished', 'team@example.com')
+                }
+            }
         }
     }
 }
